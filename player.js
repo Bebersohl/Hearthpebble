@@ -14,10 +14,21 @@ class Player extends EventEmitter {
     this.secrets = [];
     this.board = [];
     this.mana = 0;
+    this.manaCap = 0;
     this.fatigue = 0;
   }
-  drawCards(numberOfCards) {
-    for (let i = 0; i < numberOfCards; i++) {
+  gainMana(amount) {
+    for (let i = 0; i < amount; i++) {
+      if (this.manaCap < defaults.maxMana) {
+        this.manaCap += 1;
+        this.mana = this.manaCap;
+      } else {
+        this.mana = this.manaCap;
+      }
+    }
+  }
+  drawCards(amount) {
+    for (let i = 0; i < amount; i++) {
       if (this.deck.length > 0) {
         // deck still has cards
         if (this.hand.length >= defaults.maxHandLength) {

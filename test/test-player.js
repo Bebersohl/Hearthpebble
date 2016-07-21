@@ -4,6 +4,24 @@ const chai = require('chai');
 const expect = chai.expect;
 const Player = require('../player.js');
 
+describe('gainMana', () => {
+  let player;
+  beforeEach(() => {
+    player = new Player('player1');
+  });
+  it('raises players mana', () => {
+    player.gainMana(1);
+    expect(player.mana).to.equal(1);
+    expect(player.manaCap).to.equal(1);
+    player.gainMana(3);
+    expect(player.mana).to.equal(4);
+    expect(player.manaCap).to.equal(4);
+  });
+  it('does not raise players mana above maxMana', () => {
+    player.gainMana(11);
+    expect(player.mana).to.equal(10);
+  });
+});
 describe('drawCards', () => {
   let player;
   beforeEach(() => {
