@@ -1,0 +1,19 @@
+{
+  "name": "hearthpebble",
+  "version": "1.0.0",
+  "description": "hearthstone simulator",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha || exit 0",
+    "lint": "eslint . || exit 0"
+  },
+  "author": "Brandon Ebersohl",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.1.1",
+    "eslint-config-airbnb-base": "^4.0.2",
+    "eslint-plugin-import": "^1.11.1",
+    "mocha": "^2.5.3"
+  }
+}
