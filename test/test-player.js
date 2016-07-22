@@ -26,7 +26,6 @@ describe('drawCards', () => {
   let player;
   beforeEach(() => {
     player = new Player('player1');
-    player.board.push({ health: 30 });
     for (let i = 0; i < 30; i++) {
       player.deck.push({ card: 'card' });
     }

@@ -2,17 +2,27 @@
 
 const EventEmitter = require('events').EventEmitter;
 const defaults = require('./game-defaults.js');
+const Minion = require('./minion.js');
 
 class Player extends EventEmitter {
-  constructor(name) {
+  constructor(name, playerClass) {
     super();
-    this.name = name;
+    this.board = [
+      new Minion({
+        health: 30,
+        type: 'Hero',
+        name,
+        playerClass,
+      }),
+      new Minion({
+        type: 'HeroPower',
+        playerClass,
+      })];
     this.deck = [];
     this.hand = [];
     this.discarded = [];
     this.graveyard = [];
     this.secrets = [];
-    this.board = [];
     this.mana = 0;
     this.manaCap = 0;
     this.fatigue = 0;
