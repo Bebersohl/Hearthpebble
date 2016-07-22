@@ -1,8 +1,13 @@
 /* eslint-env node*/
-
+const dotenv = require('dotenv').config();
 const EventEmitter = require('events').EventEmitter;
 const defaults = require('./game-defaults.js');
 const Minion = require('./minion.js');
+const mongoose = require('mongoose');
+mongoose.connect(process.env.DB_HOST, {
+  user: process.env.DB_USER,
+  pass: process.env.DB_PASS,
+});
 
 class Player extends EventEmitter {
   constructor(values) {
