@@ -4,7 +4,16 @@ const chai = require('chai');
 const expect = chai.expect;
 const Player = require('../player.js');
 
-describe('gainMana', () => {
+describe('player constructor', () => {
+  it('creates a new player', () => {
+    const player = new Player({ name: 'Tom', playerClass: 'Hunter' });
+    expect(player.board).to.have.lengthOf(2);
+    expect(player.board[0].name).to.equal('Tom');
+    expect(player.board[0].playerClass).to.equal('Hunter');
+    expect(player.board[1].playerClass).to.equal('Hunter');
+  });
+});
+describe('player gainMana', () => {
   let player;
   beforeEach(() => {
     player = new Player('player1');
@@ -22,7 +31,7 @@ describe('gainMana', () => {
     expect(player.mana).to.equal(10);
   });
 });
-describe('drawCards', () => {
+describe('player drawCards', () => {
   let player;
   beforeEach(() => {
     player = new Player('player1');
@@ -32,20 +41,20 @@ describe('drawCards', () => {
   });
   it('draws card(s) when deck is not empty and hand has room', () => {
     player.drawCards(1);
-    expect(player.deck.length).to.equal(29);
-    expect(player.hand.length).to.equal(1);
+    expect(player.deck).to.have.lengthOf(29);
+    expect(player.hand).to.have.lengthOf(1);
     player.drawCards(3);
-    expect(player.deck.length).to.equal(26);
-    expect(player.hand.length).to.equal(4);
+    expect(player.deck).to.have.lengthOf(26);
+    expect(player.hand).to.have.lengthOf(4);
   });
   it('draws 0 cards when hand is full and burns them', () => {
     player.drawCards(15);
-    expect(player.discarded.length).to.equal(5);
-    expect(player.hand.length).to.equal(10);
+    expect(player.discarded).to.have.lengthOf(5);
+    expect(player.hand).to.have.lengthOf(10);
   });
   it('causes fatigue damage when deck is empty', () => {
     player.drawCards(31);
-    expect(player.deck.length).to.equal(0);
+    expect(player.deck).to.have.lengthOf(0);
     expect(player.board[0].health).to.equal(29);
     player.drawCards(1);
     expect(player.board[0].health).to.equal(27);
