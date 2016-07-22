@@ -17,6 +17,7 @@
     "mocha": "^2.5.3"
   },
   "dependencies": {
+    "mongoose": "^4.5.5",
     "shortid": "^2.2.6"
   }
 }
