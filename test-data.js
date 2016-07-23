@@ -10,6 +10,7 @@ mongoose.connect(process.env.DB_HOST, {
   user: process.env.DB_USER,
   pass: process.env.DB_PASS,
 });
+
 let game;
 module.exports = function getTestData(cb) {
   Deck.findById('57928747ce12d761294bc3f1')
