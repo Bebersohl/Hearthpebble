@@ -1,5 +1,4 @@
 /* eslint-env node*/
-
 const EventEmitter = require('events').EventEmitter;
 const defaults = require('./game-defaults.js');
 const Minion = require('./minion.js');

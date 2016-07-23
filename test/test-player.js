@@ -1,18 +1,9 @@
 /* eslint-env mocha*/
 
-const dotenv = require('dotenv').config();
 const chai = require('chai');
 const expect = chai.expect;
 const Player = require('../player.js');
-const HpCard = require('../card.js');
-const mongoose = require('mongoose');
-const Deck = require('../models/deck.js');
-const Card = require('../models/card.js');
-
-mongoose.connect(process.env.DB_HOST, {
-  user: process.env.DB_USER,
-  pass: process.env.DB_PASS,
-});
+const getTestData = require('../test-data.js');
 
 describe('player constructor', () => {
   it('creates a new player', () => {
@@ -42,42 +33,33 @@ describe('player gainMana', () => {
   });
 });
 describe('player drawCards', () => {
-  let player;
+  let game;
   beforeEach((done) => {
-    const playerDeck = [];
-    Deck.findById('57928747ce12d761294bc3f1')
-    .populate('cards.cardId')
-    .exec((err, deck) => {
-      if (err) { throw err; }
-      for (const card of deck.cards) {
-        for (let i = 0; i < card.cardCount; i++) {
-          playerDeck.push(new HpCard(card.cardId));
-        }
-      }
-      player = new Player({ name: 'Tom', playerClass: deck.playerClass, deck: playerDeck });
+    getTestData((results) => {
+      game = results;
       done();
     });
   });
   it('draws card(s) when deck is not empty and hand has room', () => {
-    player.drawCards(1);
-    expect(player.deck).to.have.lengthOf(29);
-    expect(player.hand).to.have.lengthOf(1);
-    player.drawCards(3);
-    expect(player.deck).to.have.lengthOf(26);
-    expect(player.hand).to.have.lengthOf(4);
+    game.players[0].drawCards(1);
+    expect(game.players[0].deck).to.have.lengthOf(29);
+    expect(game.players[0].hand).to.have.lengthOf(1);
+    game.players[0].drawCards(3);
+    expect(game.players[0].deck).to.have.lengthOf(26);
+    expect(game.players[0].hand).to.have.lengthOf(4);
   });
   it('draws 0 cards when hand is full and burns them', () => {
-    player.drawCards(15);
-    expect(player.discarded).to.have.lengthOf(5);
-    expect(player.hand).to.have.lengthOf(10);
+    game.players[0].drawCards(15);
+    expect(game.players[0].discarded).to.have.lengthOf(5);
+    expect(game.players[0].hand).to.have.lengthOf(10);
   });
   it('causes fatigue damage when deck is empty', () => {
-    player.drawCards(31);
-    expect(player.deck).to.have.lengthOf(0);
-    expect(player.board[0].health).to.equal(29);
-    player.drawCards(1);
-    expect(player.board[0].health).to.equal(27);
-    player.drawCards(1);
-    expect(player.board[0].health).to.equal(24);
+    game.players[0].drawCards(31);
+    expect(game.players[0].deck).to.have.lengthOf(0);
+    expect(game.players[0].board[0].health).to.equal(29);
+    game.players[0].drawCards(1);
+    expect(game.players[0].board[0].health).to.equal(27);
+    game.players[0].drawCards(1);
+    expect(game.players[0].board[0].health).to.equal(24);
   });
 });
