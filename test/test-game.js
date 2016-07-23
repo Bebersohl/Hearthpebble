@@ -1,19 +1,22 @@
 /* eslint-env mocha*/
-
 const chai = require('chai');
 const expect = chai.expect;
 const Game = require('../game.js');
+const HpCard = require('../card.js');
+const Deck = require('../models/deck.js');
 
 describe('game constructor', () => {
   it('creates a new game', () => {
-    const game = new Game(
+    const game = new Game([
       {
         name: 'Tom',
         playerClass: 'Hunter',
+        deck: [],
       }, {
         name: 'Bob',
         playerClass: 'Mage',
-      });
+        deck: [],
+      }]);
     expect(game.players).to.have.lengthOf(2);
     expect(game.players[0].board).to.have.lengthOf(2);
     expect(game.players[1].board).to.have.lengthOf(2);
@@ -21,19 +24,29 @@ describe('game constructor', () => {
 });
 describe('game emit start', () => {
   let game;
-  beforeEach(() => {
-    game = new Game(
-      {
-        name: 'Tom',
-        playerClass: 'Hunter',
-      }, {
-        name: 'Bob',
-        playerClass: 'Mage',
-      });
-    for (let i = 0; i < 30; i++) {
-      game.players[0].deck.push({ card: 'card' });
-      game.players[1].deck.push({ card: 'card' });
-    }
+  beforeEach((done) => {
+    const playerDeck = [];
+    Deck.findById('57928747ce12d761294bc3f1')
+    .populate('cards.cardId')
+    .exec((err, deck) => {
+      if (err) { throw err; }
+      for (const card of deck.cards) {
+        for (let i = 0; i < card.cardCount; i++) {
+          playerDeck.push(new HpCard(card.cardId));
+        }
+      }
+      game = new Game([
+        {
+          name: 'Tom',
+          playerClass: deck.playerClass,
+          deck: playerDeck,
+        }, {
+          name: 'Bob',
+          playerClass: deck.playerClass,
+          deck: playerDeck,
+        }]);
+      done();
+    });
   });
   it('draws intial cards', () => {
     game.emit('start');
@@ -49,19 +62,29 @@ describe('game emit start', () => {
 });
 describe('game emit new turn', () => {
   let game;
-  beforeEach(() => {
-    game = new Game(
-      {
-        name: 'Tom',
-        playerClass: 'Hunter',
-      }, {
-        name: 'Bob',
-        playerClass: 'Mage',
-      });
-    for (let i = 0; i < 30; i++) {
-      game.players[0].deck.push({ card: 'card' });
-      game.players[1].deck.push({ card: 'card' });
-    }
+  beforeEach((done) => {
+    const playerDeck = [];
+    Deck.findById('57928747ce12d761294bc3f1')
+    .populate('cards.cardId')
+    .exec((err, deck) => {
+      if (err) { throw err; }
+      for (const card of deck.cards) {
+        for (let i = 0; i < card.cardCount; i++) {
+          playerDeck.push(new HpCard(card.cardId));
+        }
+      }
+      game = new Game([
+        {
+          name: 'Tom',
+          playerClass: deck.playerClass,
+          deck: playerDeck,
+        }, {
+          name: 'Bob',
+          playerClass: deck.playerClass,
+          deck: playerDeck,
+        }]);
+      done();
+    });
   });
   it('draws the player a card', () => {
     game.emit('new turn');

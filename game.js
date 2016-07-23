@@ -10,12 +10,14 @@ class Game extends EventEmitter {
     this.turn = 1;
     this.players = [
       new Player({
-        name: players.name,
-        playerClass: players.playerClass,
+        name: players[0].name,
+        playerClass: players[0].playerClass,
+        deck: players[0].deck,
       }),
       new Player({
-        name: players.name,
-        playerClass: players.playerClass,
+        name: players[1].name,
+        playerClass: players[1].playerClass,
+        deck: players[1].deck,
       })];
     // determine who goes first
     if (Math.round((Math.random() * (1 - 0)) + 0)) {

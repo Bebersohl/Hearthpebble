@@ -6,7 +6,7 @@ const Deck = new Schema({
   playerClass: String,
   cards: [{ _id: false,
     cardId: {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.String,
       ref: 'Card',
       required: true,
     },

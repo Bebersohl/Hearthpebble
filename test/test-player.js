@@ -1,12 +1,22 @@
 /* eslint-env mocha*/
 
+const dotenv = require('dotenv').config();
 const chai = require('chai');
 const expect = chai.expect;
 const Player = require('../player.js');
+const HpCard = require('../card.js');
+const mongoose = require('mongoose');
+const Deck = require('../models/deck.js');
+const Card = require('../models/card.js');
+
+mongoose.connect(process.env.DB_HOST, {
+  user: process.env.DB_USER,
+  pass: process.env.DB_PASS,
+});
 
 describe('player constructor', () => {
   it('creates a new player', () => {
-    const player = new Player({ name: 'Tom', playerClass: 'Hunter' });
+    const player = new Player({ name: 'Tom', playerClass: 'Hunter', deck: [] });
     expect(player.board).to.have.lengthOf(2);
     expect(player.board[0].name).to.equal('Tom');
     expect(player.board[0].playerClass).to.equal('Hunter');
@@ -16,7 +26,7 @@ describe('player constructor', () => {
 describe('player gainMana', () => {
   let player;
   beforeEach(() => {
-    player = new Player('player1');
+    player = new Player({ name: 'Tom', playerClass: 'Hunter', deck: [] });
   });
   it('raises players mana', () => {
     player.gainMana(1);
@@ -33,11 +43,20 @@ describe('player gainMana', () => {
 });
 describe('player drawCards', () => {
   let player;
-  beforeEach(() => {
-    player = new Player('player1');
-    for (let i = 0; i < 30; i++) {
-      player.deck.push({ card: 'card' });
-    }
+  beforeEach((done) => {
+    const playerDeck = [];
+    Deck.findById('57928747ce12d761294bc3f1')
+    .populate('cards.cardId')
+    .exec((err, deck) => {
+      if (err) { throw err; }
+      for (const card of deck.cards) {
+        for (let i = 0; i < card.cardCount; i++) {
+          playerDeck.push(new HpCard(card.cardId));
+        }
+      }
+      player = new Player({ name: 'Tom', playerClass: deck.playerClass, deck: playerDeck });
+      done();
+    });
   });
   it('draws card(s) when deck is not empty and hand has room', () => {
     player.drawCards(1);
