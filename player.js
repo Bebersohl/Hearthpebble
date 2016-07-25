@@ -2,6 +2,7 @@
 const EventEmitter = require('events').EventEmitter;
 const defaults = require('./game-defaults.js');
 const Minion = require('./minion.js');
+const _ = require('underscore');
 
 class Player extends EventEmitter {
   constructor(values) {
@@ -25,6 +26,18 @@ class Player extends EventEmitter {
     this.mana = 0;
     this.manaCap = 0;
     this.fatigue = 0;
+    this.status = 'mulligan';
+    this.once('mulligan', (rejectedCardIDs) => {
+      for (let i = 0; i < this.hand.length; i++) {
+        for (let j = 0; j < rejectedCardIDs.length; j++) {
+          if (this.hand[i].id === rejectedCardIDs[j]) {
+            this.deck.push(this.hand.splice(i, 1));
+          }
+        }
+      }
+      _.shuffle(this.deck)
+      this.drawCards(rejectedCardIDs.length);
+    });
   }
   gainMana(amount) {
     for (let i = 0; i < amount; i++) {

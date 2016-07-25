@@ -4,6 +4,7 @@ const chai = require('chai');
 const expect = chai.expect;
 const Player = require('../player.js');
 const getTestData = require('../test-data.js');
+const _ = require('underscore');
 
 describe('player constructor', () => {
   it('creates a new player', () => {
@@ -61,5 +62,23 @@ describe('player drawCards', () => {
     expect(game.players[0].board[0].health).to.equal(27);
     game.players[0].drawCards(1);
     expect(game.players[0].board[0].health).to.equal(24);
+  });
+});
+describe('player emit mulligan', () => {
+  let game;
+  beforeEach((done) => {
+    getTestData((results) => {
+      game = results;
+      game.emit('start');
+      done();
+    });
+  });
+  it('pushes rejected cards into the deck', () => {
+    game.players[0].emit('mulligan', []);
+    game.players[1].emit('mulligan', []);
+    expect(game.players[0].deck).to.have.lengthOf(27);
+    expect(game.players[0].hand).to.have.lengthOf(3);
+    expect(game.players[1].deck).to.have.lengthOf(26);
+    expect(game.players[1].hand).to.have.lengthOf(4);
   });
 });
