@@ -35,8 +35,9 @@ class Player extends EventEmitter {
           }
         }
       }
-      _.shuffle(this.deck)
+      this.deck = _.shuffle(this.deck);
       this.drawCards(rejectedCardIDs.length);
+      this.status = 'play';
     });
   }
   gainMana(amount) {
