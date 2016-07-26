@@ -4,7 +4,6 @@ const chai = require('chai');
 const expect = chai.expect;
 const Player = require('../player.js');
 const getTestData = require('../test-data.js');
-const _ = require('underscore');
 
 describe('player constructor', () => {
   it('creates a new player', () => {
@@ -45,9 +44,13 @@ describe('player drawCards', () => {
     game.players[0].drawCards(1);
     expect(game.players[0].deck).to.have.lengthOf(29);
     expect(game.players[0].hand).to.have.lengthOf(1);
+    expect(game.players[0].hand[0]).to.be.an('object');
     game.players[0].drawCards(3);
     expect(game.players[0].deck).to.have.lengthOf(26);
     expect(game.players[0].hand).to.have.lengthOf(4);
+    for (const card of game.players[0].hand) {
+      expect(card).to.be.an('object');
+    }
   });
   it('draws 0 cards when hand is full and burns them', () => {
     game.players[0].drawCards(15);

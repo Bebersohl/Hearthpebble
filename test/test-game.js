@@ -34,12 +34,6 @@ describe('game emit start', () => {
     expect(game.players[0].hand).to.have.lengthOf(3);
     expect(game.players[1].hand).to.have.lengthOf(4);
   });
-  it('can only be called once', () => {
-    game.emit('start');
-    expect(game.players[0].hand).to.have.lengthOf(3);
-    game.emit('start');
-    expect(game.players[0].hand).to.have.lengthOf(3);
-  });
 });
 describe('game emit new turn', () => {
   let game;

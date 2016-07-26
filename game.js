@@ -3,6 +3,7 @@
 const EventEmitter = require('events').EventEmitter;
 const defaults = require('./game-defaults.js');
 const Player = require('./player.js');
+const _ = require('underscore');
 
 class Game extends EventEmitter {
   constructor(players) {
@@ -26,6 +27,8 @@ class Game extends EventEmitter {
       this.players[0] = temp;
     }
     this.once('start', () => {
+      this.players[0].deck = _.shuffle(this.players[0].deck);
+      this.players[1].deck = _.shuffle(this.players[1].deck);
       this.players[0].drawCards(defaults.initialCards);
       this.players[1].drawCards(defaults.initialCards + 1);
     });

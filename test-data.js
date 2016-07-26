@@ -13,7 +13,7 @@ mongoose.connect(process.env.DB_HOST, {
 
 let game;
 module.exports = function getTestData(cb) {
-  Deck.findById('57928747ce12d761294bc3f1')
+  Deck.findById('5796b2f090c6f596f9e8d62d')
   .populate('cards.cardId')
   .exec((err, deck) => {
     if (err) { throw err; }
